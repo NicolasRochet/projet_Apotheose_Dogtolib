@@ -1,0 +1,13 @@
+@use 'src/styles/vars';
+
+// Style du composant global de la page AccountEdit
+.accountEdit{
+  background-color: vars.$lightColor;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+

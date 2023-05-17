@@ -1,0 +1,94 @@
+@use 'src/styles/vars';
+
+// Composant global de la page Account
+.account {
+  width: 100%;
+  background-color: vars.$lightColor;
+  display: flex;
+  flex-direction: column;
+}
+
+h2 {
+  color: vars.$color;
+  text-align: center;
+  margin-left: 2rem;
+  // margin-top: 2rem;
+  // margin-bottom: 2rem;
+}
+
+// Partie supérieure de la page comprenant les rappels 
+//créés par l'utilisateurs et attribué à ses compagnons
+hr {
+  margin: 3rem;
+  width: 300px;
+
+
+}
+
+// Partie centre de la page comprenant les compagnons 
+//ajouté au préalable dans la partie compagnons du compte
+.companions {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+}
+
+.companion {
+  list-style-type: none;
+
+}
+
+// Partie inférieure de la page comprenant les informations sur le ou les véterinaire(s) favoris
+.favouriteVeterinary {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  margin-top: 1rem;
+  width: 5rem;
+}
+
+.avatarName {
+  font-weight: bold;
+}
+
+h3 {
+  padding: 1rem 1rem;
+
+}
+
+.account-description {
+  margin-left: 2rem;
+  background-color: white;
+  padding: 2rem 2rem 2rem 2rem;
+  border: solid 1px vars.$color;
+  width: 300px;
+  text-align: center;
+
+
+}
+
+// screen mobile
+@media (max-width: 768px) {
+
+  .reminders {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  // Partie centre de la page comprenant les compagnons 
+  //ajouté au préalable dans la partie compagnons du compte
+  .companions {
+    list-style-type: none;
+
+
+  }
+}

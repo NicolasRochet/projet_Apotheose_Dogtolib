@@ -1,0 +1,10 @@
+@use '/src/styles/vars';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: vars.$lightColor;
+  font-family: vars.$font, sans-serif;
+}

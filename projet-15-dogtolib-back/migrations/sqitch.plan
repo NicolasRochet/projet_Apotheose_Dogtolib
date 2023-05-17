@@ -1,0 +1,5 @@
+%syntax-version=1.0.0
+%project=dogtolib
+
+1.tables_creation 2023-05-04T13:07:33Z Remi <remi.garnier@proton.me> # Création initiale des tables
+2.add_title_field 2023-05-17T14:08:22Z Remi <remi.garnier@proton.me> # Ajout du titre sur la table reminder

@@ -1,0 +1,25 @@
+// NavBar - Header
+@use '/src/styles/vars';
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 2rem;
+  color: black;
+  height: 5rem;
+
+  &-nav {
+    display: flex;
+    justify-content: center;
+
+    &-a {
+      padding: 0 1rem;
+
+      & img {
+        width: 30px;
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+@use 'src/styles/vars';
+
+.reminders {
+  padding: 3rem 0 0 3rem;
+
+
+  &-list {
+    margin-top: 3rem;
+    display: flex;
+    gap: 2rem;
+  }
+
+  &-item {
+    max-width: 17rem;
+    min-width: 17rem;
+    list-style: none;
+    border: solid 1px vars.$color;
+    border-radius: 5px;
+    box-shadow: 13px 13px 26px #93938c,
+      -13px -13px 26px #ffffff;
+
+    & header {
+      text-align: center;
+      display: block;
+      padding: 1rem;
+      width: 100%;
+      background-color: vars.$color;
+    }
+
+    & main {
+      padding: 1rem;
+
+      & h3 {
+        text-align: center;
+      }
+    }
+
+    &-description {
+      background-color: vars.$lightColor;
+      width: 100%;
+      padding: 1rem;
+    }
+  }
+}
