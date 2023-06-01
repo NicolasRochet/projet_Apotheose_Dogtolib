@@ -6,6 +6,8 @@ import {
   SAVE_AUTH_TOKEN,
   LOGOUT,
   SAVE_PROFIL,
+  SAVE_FAVORITES,
+  CHANGE_NAVBAR,
 } from "../actions/user";
 
 // Je crée mon initialState pour afficher les infos du profil
@@ -22,6 +24,8 @@ export const initialState = {
     role: "",
   },
   token: "",
+  favorites: [],
+  isOpen: true,
 };
 
 const reducer = (state = initialState, action = {}) => {
@@ -47,6 +51,14 @@ const reducer = (state = initialState, action = {}) => {
     case LOGOUT:
       return initialState;
 
+    case SAVE_FAVORITES:
+      const { favorites } = action;
+      return { ...state, ...favorites };
+
+    case CHANGE_NAVBAR:
+      const { isOpen } = action;
+      return { ...state, isOpen: !isOpen };
+  
     default:
       return state;
   }

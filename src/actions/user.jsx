@@ -5,6 +5,11 @@ export const CHANGE_PROFIL = "CHANGE_PROFIL";
 export const LOAD_PROFIL = "LOAD_PROFIL";
 export const SAVE_PROFIL = "SAVE_PROFIL";
 export const LOGOUT = "LOGOUT";
+export const LOAD_FAVORITES = "LOAD_FAVORITES";
+export const SAVE_FAVORITES = "SAVE_FAVORITES";
+export const DELETE_FAVORITE = "DELETE_FAVORITE";
+export const ADD_FAVORITE = "ADD_FAVORITE";
+export const CHANGE_NAVBAR = "CHANGE_NAVBAR";
 
 // Action pour se connecter
 export const submitLogin = (email, password) => ({
@@ -37,7 +42,31 @@ export const updateField = (identifier, newValue) => ({
   identifier,
 });
 
+export const loadFavorites = () => ({
+  type: LOAD_FAVORITES,
+});
+
+export const saveFavorites = (favorites) => ({
+  type: SAVE_FAVORITES,
+  favorites,
+});
+export const deleteFavorite = (veterinaryId) => ({
+  type: DELETE_FAVORITE,
+  veterinaryId,
+});
+
+export const addFavorite = (veterinaryId) => ({
+  type: ADD_FAVORITE,
+  veterinaryId,
+});
+
 //Action pour se déconnecter
 export const logout = () => ({
   type: LOGOUT,
+});
+
+//Action pour se déconnecter
+export const changeNavBar = (isOpen) => ({
+  type: CHANGE_NAVBAR,
+  isOpen,
 });

@@ -5,13 +5,16 @@
   background-color: vars.$color;
   color: black;
   width: vars.$menuWidthOpen;
-  position: static;
+  height: 100%;
   display: flex;
   flex-direction: column;
   transition: 0.5s;
+  // border-radius: 0 1.5rem 1.5rem 0;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  // margin-right: -5px;
 
   &-close {
-    height: 100vh;
+    height: 100%;
     background-color: vars.$color;
     width: vars.$menuWidthClose;
     position: static;
@@ -19,6 +22,11 @@
     flex-direction: column;
     color: black;
     transition: 0.5s;
+    // border-radius: 0 1.5rem 1.5rem 0;
+
+    & .NavBar-link-text {
+      display: none;
+    }
   }
 
   // Partie générale concernant le profil de l'utilisateur
@@ -50,7 +58,7 @@
     &-name {
       padding: 2rem;
       font-weight: bold;
-      text-transform:capitalize;
+      text-transform: capitalize;
     }
   }
 
@@ -89,7 +97,8 @@
   // Partie relative aux liens
   &-link {
     display: flex;
-    margin: 1rem 0;
+    flex-direction: row;
+    margin: 0.5rem 0;
     padding: 0 1rem;
     color: black;
     background-color: vars.$color;
@@ -103,6 +112,11 @@
     width: 3rem;
     max-height: 3rem;
     margin: 0 0.5rem;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 
   // Partie relative aux textes des liens

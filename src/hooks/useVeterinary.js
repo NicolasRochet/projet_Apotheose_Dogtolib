@@ -1,12 +1,11 @@
 import { useSelector } from "react-redux";
 
 const useVeterinary = () => {
-  const userprofil = useSelector((state) => state.user.profil);
-  console.log("userprofil:", userprofil);
+  const profil = useSelector((state) => state.user.profil);
 
   const roleVeterinary = () => {
     const { role } = profil;
-    return role !== "";
+    return role === "V";
   };
 
   return { roleVeterinary };

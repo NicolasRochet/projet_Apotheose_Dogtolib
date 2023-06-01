@@ -23,6 +23,9 @@ function AccountEdit() {
     address: "Adresse",
     zip_code: "Code postal",
     city: "Ville",
+    opening_hour: "Horaire d'ouverture",
+    closing_hour: "Horaire de fermeture",
+    payment_modes: "Moyens de paiements",
   };
 
   const dispatch = useDispatch();
@@ -47,7 +50,6 @@ function AccountEdit() {
   // fonction pour rendre l'input en lecture seule
   function handleValidate(index) {
     inputRefs.current[index].readOnly = true;
-    console.log(inputRefs.current[index].name, inputRefs.current[index].value);
     setFocusedInput(null);
     API.update.accountEdit(
       token,
@@ -68,12 +70,16 @@ function AccountEdit() {
       <NavBar />
       <div className="accountEdit">
         <Reminders />
-        <h2>Mon profil</h2>
         <section className="profil">
-          <div className="profil-inputs">
+          <h2>Mon profil</h2>
+          <div className="accountEdit-profil-inputs">
             {Object.keys(profil)
               .filter(
-                (prop) => prop !== "id" && prop !== "role" && prop !== "isOpen"
+                (prop) =>
+                  prop !== "id" &&
+                  prop !== "role" &&
+                  prop !== "veterinary_id" &&
+                  prop !== "isOpen"
               )
               .map((prop, index) => (
                 <div key={prop} className="input-container">

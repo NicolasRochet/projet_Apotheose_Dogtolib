@@ -14,9 +14,9 @@ module.exports = class Veterinary extends CoreDatamapper {
             account.address as address,
             account.city as city,
             account.zip_code as zipcode,
-            veterinary.opening_hour as opening_hour,
-            veterinary.closing_hour as closing_hour,
-            veterinary.payment_modes as payment_modes
+            TO_CHAR(TO_TIMESTAMP(${this.tableName}.opening_hour::TEXT, 'HH24:MI:SS'), 'HH24:MI') AS opening_hour,
+            TO_CHAR(TO_TIMESTAMP(${this.tableName}.closing_hour::TEXT, 'HH24:MI:SS'), 'HH24:MI') AS closing_hour,
+            ${this.tableName}.payment_modes as payment_modes
             FROM ${this.tableName} 
             JOIN account ON account.id = ${this.tableName}.account_id
             WHERE ${this.tableName}.id = $1`,
@@ -45,8 +45,8 @@ module.exports = class Veterinary extends CoreDatamapper {
               account.role AS role,
               ${this.tableName}.id AS veterinary_id,
               ${this.tableName}.payment_modes AS payment_modes,
-              ${this.tableName}.opening_hour AS opening_hour,
-              ${this.tableName}.closing_hour AS closing_hour
+              TO_CHAR(TO_TIMESTAMP(${this.tableName}.opening_hour::TEXT, 'HH24:MI:SS'), 'HH24:MI') AS opening_hour,
+              TO_CHAR(TO_TIMESTAMP(${this.tableName}.closing_hour::TEXT, 'HH24:MI:SS'), 'HH24:MI') AS closing_hour
             FROM ${this.tableName} 
             JOIN account ON account.id = ${this.tableName}.account_id
             WHERE account.id = $1`,
@@ -87,5 +87,54 @@ module.exports = class Veterinary extends CoreDatamapper {
     const row = result.rows[0];
 
     return row;
+  }
+
+  async searchVeterinary(lastname, city) {
+    const preparedQuery = {
+      text: `SELECT
+            account.lastname AS lastname,
+            account.firstname AS firstname,
+            account.email AS email,
+            account.phone_number AS phone_number,
+            account.address AS address,
+            account.city AS city,
+            regexp_replace(account.city, '-', ' ', 'g') AS formatted_city,
+            account.zip_code AS zip_code,
+            ${this.tableName}.id AS veterinary_id,
+            ${this.tableName}.payment_modes AS payment_modes,
+            TO_CHAR(TO_TIMESTAMP(${this.tableName}.opening_hour::TEXT, 'HH24:MI:SS'), 'HH24:MI') AS opening_hour,
+            TO_CHAR(TO_TIMESTAMP(${this.tableName}.closing_hour::TEXT, 'HH24:MI:SS'), 'HH24:MI') AS closing_hour
+            FROM ${this.tableName}
+            JOIN account ON account.id = ${this.tableName}.account_id
+            WHERE 
+            CASE 
+              WHEN $1 = '' THEN regexp_replace(account.city, '-', ' ', 'g') ILIKE '%' || $2 || '%'
+              WHEN $2 = '' THEN account.lastname ILIKE '%' || $1 || '%'
+              ELSE account.lastname ILIKE '%' || $1 || '%' OR regexp_replace(account.city, '-', ' ', 'g') ILIKE '%' || $2 || '%'
+            END
+            ORDER BY
+              CASE
+                WHEN regexp_replace(account.city, '-', ' ', 'g') ILIKE $2 AND account.lastname ILIKE $1 THEN 1
+                WHEN regexp_replace(account.city, '-', ' ', 'g') ILIKE $2 AND (account.lastname ILIKE $1 || '%' OR account.lastname ILIKE '%' || $1) OR
+                account.lastname ILIKE $1 AND (regexp_replace(account.city, '-', ' ', 'g') ILIKE $2 || '%' OR regexp_replace(account.city, '-', ' ', 'g') ILIKE '%' || $1) THEN 2
+                WHEN regexp_replace(account.city, '-', ' ', 'g') ILIKE $2 OR account.lastname ILIKE $1 THEN 3
+                WHEN regexp_replace(account.city, '-', ' ', 'g') ILIKE $2 || '%' AND account.lastname ILIKE $1 || '%' THEN 4
+                WHEN regexp_replace(account.city, '-', ' ', 'g') ILIKE $2 || '%' OR account.lastname ILIKE $1 || '%' THEN 5
+                WHEN regexp_replace(account.city, '-', ' ', 'g') ILIKE '%' || $2 AND account.lastname ILIKE '%' || $1 THEN 6
+                WHEN regexp_replace(account.city, '-', ' ', 'g') ILIKE '%' || $2 OR account.lastname ILIKE '%' || $1  THEN 7
+                ELSE 8
+                END,
+              formatted_city,
+              account.lastname;`,
+      values: [lastname, city],
+    };
+
+    const searchResult = await this.client.query(preparedQuery);
+
+    if (searchResult.rowCount === 0) {
+      return null;
+    }
+
+    return searchResult.rows;
   }
 };

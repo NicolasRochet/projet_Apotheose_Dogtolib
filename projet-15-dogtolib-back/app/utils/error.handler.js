@@ -4,10 +4,7 @@ module.exports = (err, req, res, next) => {
   debug(err);
 
   // Erreurs personnalisées
-  if (err.code === 'INVALID_CREDENTIALS'
-    || err.code === 'INVALID_TOKEN'
-    || err.code === 'INVALID_ROLE'
-    || err.code === 'USED_MAIL') {
+  if (err.name === 'DogtolibError') {
     return res.status(err.status).json({ error: err.message });
   }
 
@@ -23,11 +20,6 @@ module.exports = (err, req, res, next) => {
   // Erreur favoris déjà existant
   if (err.code === '23505' && err.table === 'account_has_favorite') {
     return res.status(409).json({ error: 'Favorite already exists' });
-  }
-
-  // Erreur route non trouvée
-  if (err.cause === 404) {
-    return res.status(404).json({ error: 'API Route not found' });
   }
 
   // Par défaut

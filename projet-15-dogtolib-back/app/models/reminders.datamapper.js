@@ -14,7 +14,7 @@ module.exports = class Reminder extends CoreDatamapper {
         reminder.veterinary_id as veterinary_id,
         reminder.title as title,
         reminder.label as label,
-        reminder.datetime as datetime
+        TO_CHAR(reminder.datetime, 'DD/MM/YYYY HH24:MI') as datetime
       FROM ${this.tableName}
       JOIN veterinary ON veterinary.id = reminder.veterinary_id
       JOIN account ON account.id = veterinary.account_id
@@ -25,9 +25,6 @@ module.exports = class Reminder extends CoreDatamapper {
 
     const result = await this.client.query(preparedQuery);
 
-    if (result.rowCount === 0) {
-      return null;
-    }
     return result.rows;
   }
 
@@ -42,7 +39,7 @@ module.exports = class Reminder extends CoreDatamapper {
         reminder.animal_id as animal_id,
         reminder.title as title,
         reminder.label as label,
-        reminder.datetime as datetime,
+        TO_CHAR(reminder.datetime, 'DD/MM/YYYY HH24:MI') as datetime,
         animal.name as animal_name
         FROM ${this.tableName}
         JOIN animal ON animal.id = reminder.animal_id
@@ -53,9 +50,6 @@ module.exports = class Reminder extends CoreDatamapper {
     };
     const result = await this.client.query(preparedQuery);
 
-    if (result.rowCount === 0) {
-      return null;
-    }
     return result.rows;
   }
 
@@ -66,19 +60,36 @@ module.exports = class Reminder extends CoreDatamapper {
       reminder.animal_id as animal_id,
       reminder.title as title,
       reminder.label as label,
-      reminder.datetime as datetime,
+      TO_CHAR(reminder.datetime, 'DD/MM/YYYY HH24:MI') as datetime,
       animal.account_id as account_id
       FROM ${this.tableName}
       JOIN animal ON animal.id = reminder.animal_id
-      WHERE ${this.tableName}.animal_id = $1`,
+      WHERE ${this.tableName}.animal_id = $1
+      ORDER BY reminder.datetime ASC`,
       values: [animalId],
     };
     const result = await this.client.query(preparedQuery);
 
-    if (result.rowCount === 0) {
-      return null;
-    }
+    return result.rows;
+  }
 
+  async findUpcomingReminders(days) {
+    const preparedQuery = {
+      text: `SELECT 
+              animal.name, 
+              TO_CHAR(reminder.datetime, 'DD/MM/YYYY HH24:MI') as datetime, 
+              coalesce(account.email, vetAccount.email) as email , 
+              reminder.label, 
+              reminder.title 
+            FROM reminder
+            LEFT JOIN animal ON reminder.animal_id = animal.id
+            LEFT JOIN account ON animal.account_id = account.id
+            LEFT JOIN veterinary ON reminder.veterinary_id = veterinary.id 
+            LEFT JOIN account vetAccount ON veterinary.account_id = vetAccount.id
+            WHERE date(datetime) = date(now() + interval '1 day' * $1)`,
+      values: [days],
+    };
+    const result = await this.client.query(preparedQuery);
     return result.rows;
   }
 };

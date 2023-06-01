@@ -17,28 +17,31 @@ import "./Home.scss";
 
 const advertising = [
   {
-    image: "/images/avatar/large/elliot.jpg",
+    id: 1,
+    image: "/images/croquetteland.webp",
     link: "https://www.croquetteland.com/",
     header: "CroquetteLand",
-    meta: "site de croquette",
+    meta: "Boutique en ligne ",
     description:
       "Chez Croquetteland, trouvez tout pour vos animaux de compagnie",
   },
   {
-    image: "/images/avatar/large/elliot.jpg",
-    link: "https://www.croquetteland.com/",
-    header: "CroquetteLand",
-    meta: "site de croquette",
+    id: 2,
+    image: "/images/spa.png",
+    link: "https://www.la-spa.fr/missions/",
+    header: "SPA",
+    meta: "Refuge pour animaux",
     description:
-      "Chez Croquetteland, trouvez tout pour vos animaux de compagnie",
+      "La SPA intervient en France pour le bien-être, la défense et la protection des animaux. Elle agit sur plusieurs missions essentielles grâce à un vaste réseau sur le territoire national. ",
   },
   {
-    image: "/images/avatar/large/elliot.jpg",
-    link: "https://www.croquetteland.com/",
+    id: 3,
+    image: "/images/animalin.jpg",
+    link: "https://www.amimalin.com/",
     header: "CroquetteLand",
-    meta: "site de croquette",
+    meta: "Dog-sitter",
     description:
-      "Chez Croquetteland, trouvez tout pour vos animaux de compagnie",
+      "La meilleure solution pour faire garder vos animaux avec un réseau de plus de 100 000 petsitters partout en France",
   },
 ];
 
@@ -47,7 +50,7 @@ function Home() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("test@machin.fr");
+  const [email, setEmail] = useState("nick.rock@gmail.com");
   const [password, setPassword] = useState("test");
 
   useEffect(() => {
@@ -71,10 +74,7 @@ function Home() {
     API.auth.signin(email, password).then((response) => {
       // et on stock la réponse renvoyée
       const { token } = response.data;
-      // const isLogged = true;
       dispatch(saveAuthToken(token));
-      // console.log({ token });
-      // response: { data: { token: '' }, ...response }
       dispatch(loadProfil());
     });
   }
@@ -128,7 +128,7 @@ function Home() {
             />
           </label>
 
-          <button className="button button-connexion" type="submit">
+          <button className="button button-subscribe" type="submit">
             Se connecter
           </button>
         </form>
@@ -144,16 +144,15 @@ function Home() {
       <h3 className="partner-title">Nos partenaires</h3>
       <div className="advertising-container">
         {advertising.map((item, i) => (
-          //! pensez à mettre une key unique avec item.id
-          <Link className="linkCard" src={item.link} key={`link-card--${i}`}>
-            <Card
-              className="card"
-              image={item.image}
-              header={item.header}
-              meta={item.meta}
-              description={item.description}
-            />
-          </Link>
+          <div
+            id="card" key={item.id}>
+            <img className="card-img" src={item.image} alt={item.image} />
+            <h4>{item.header}</h4>
+            <Link className="linkCard" src={item.link} key={`link-card--${i}`}>
+              <h5 className="tag">{item.meta}</h5>
+            </Link>
+            <p className="description">{item.description}</p>
+          </div>
         ))}
       </div>
     </div>

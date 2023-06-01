@@ -1,10 +1,14 @@
-const bcrypt = require('bcrypt');
-const { veterinary, account } = require('../models/index.datamapper');
+const { veterinary } = require('../models/index.datamapper');
 
 const veterinaryController = {
 
   async searchVeterinary(req, res) {
-    res.json({ reponse: 'veterinary search result' });
+    const name = req.query?.name || '';
+    let city = req.query?.city || '';
+
+    city = city.replaceAll('-', ' ');
+    const searchResult = await veterinary.searchVeterinary(name, city);
+    res.json({ searchResult });
   },
 };
 

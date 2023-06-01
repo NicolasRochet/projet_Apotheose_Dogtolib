@@ -13,7 +13,7 @@ reminderRouter.route('/')
   * @tags Reminder
   * @typedef {object} reminder
   * @summary Renvoi les rappels de l’utilisateur connecté
-  * @return {[reminder]} 200 - Un tableau de rappels
+  * @return {[reminder]} 200 - reminders Un tableau de rappels
   */
   .get(controllerWrapper(reminderControler.getReminders))
 /**
@@ -24,7 +24,7 @@ reminderRouter.route('/')
  * @param {string} body.label.required - contenu du rappel
  * @param {string} body.title.required - titre du rappel
  * @param {string} body.datetime.required - date et heure du rappel
- * @return {reminder} 201 - Le rappel créé
+ * @return {reminder} 201 - reminder: Le rappel créé
  * @return {object} 400 - erreur de validation des données en entrée
  * @return {object} 403 - L'utilisateur n'a pas les droits pour créer un rappel sur cet animal
  */
@@ -32,9 +32,11 @@ reminderRouter.route('/')
 
 reminderRouter.route('/animal/:id(\\d+)')
 /**
+ * GET /reminder/animal/{id}
  * @summary Renvoi les rappels propres à un animal donné
  * @tags Reminder
- * @return {[reminder]} 200 - Un tableau de rappels
+ * @param {number} query.id.required - id de l'animal
+ * @return {[reminder]} 200 - reminders Un tableau de rappels
  */
   .get(controllerWrapper(reminderControler.getAnimalReminders));
 
@@ -42,7 +44,7 @@ reminderRouter.route('/:id(\\d+)')
 /**
  * PATCH /reminder/{id}
  * @tags Reminder
- * @summary ajoute un rappel
+ * @summary Met à jour un rappel
  * @param {string} body.label optionnel contenu du rappel
  * @param {string} body.title optionnel titre du rappel
  * @param {string} body.datetime  optionnel date et heure du rappel

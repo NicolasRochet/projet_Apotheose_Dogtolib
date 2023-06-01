@@ -1,5 +1,10 @@
 @use 'src/styles/vars';
 
+
+#eye{
+  padding: 1px;
+}
+
 .register {
   height: 100vh;
   width: 100vw;
@@ -7,28 +12,48 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 1rem;  
-}
+  margin: 1rem 0;  
 
-.register-description {
-  margin: 1rem;
-  text-align: center;
+  &-description {
+    font-size: 1.3rem;
+    text-align: center;
+    margin: 1rem;
+    text-align: center;
+  }
+
+  &-span {
+    width: 100rem;
+    color: vars.$color;
+    font-style: italic;
+    font-weight: bold;
+    margin: 3rem 0;
+  }
 }
 
 h2 {
   color: vars.$color;
+  font-size: 2rem;
 }
 
-.form {
+.form-register {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  align-content: flex-start;
+  align-content: center;
+  flex-grow: 1;
   width: 90vw;
   margin: 1rem;
   text-align: center;
   font-weight: bold;
+}
+
+.profil-inputs{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;  
+  align-items: center;
+  margin: 1rem;
 }
 
 .label {
@@ -39,7 +64,7 @@ h2 {
   align-items: center;
 }
 
-.input {
+.input-register {
   background-color: vars.$mediumColor;
   color: black;
   font-family: vars.$font;
@@ -48,12 +73,13 @@ h2 {
   border: solid 1px vars.$mediumColor;
   padding: 5px;
   margin: 1rem 0 2rem 0;
-  width: 40vh;
+  width: 25rem;
 }
 
 input::placeholder {
   color: vars.$color;
 }
+
 
 .button {
   background-color: vars.$color;
@@ -65,15 +91,40 @@ input::placeholder {
   &-subscribe {
     color: vars.$lightColor;
     border: solid 1px vars.$color;
-    width: 10rem;
-
+    width: 20rem;
     align-content: center;
+    margin: 1rem;
   }
 }
 
 hr {
   margin: 3rem;
   width: 60%;
+}
+
+.register{  
+
+  &-fieldset {
+    margin: 1rem;
+  }
+
+  &-radio {
+    color: vars.$policeColor;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem;
+    border-radius: none;
+
+    &-input {
+      margin: 1rem;
+    }
+
+    &-label {
+      margin: 0 1rem 0 0;
+    }
+  }    
 }
 
 .advertising-container {
@@ -86,32 +137,31 @@ hr {
   margin-bottom: 2rem;
 }
 
-.button-subscribe:hover {
-  background-color: vars.$color;
-  color: black;
-  cursor: pointer;
-}
+// .linkCard {
+//   // background-color: red;
+// }
 
-.button-connexion:hover {
-  color: black;
-  cursor: pointer;
-}
+// .card{
+//   // background-color: blue;
+// }
 
-.register-radio {
-  color: vars.$policeColor;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin: 1rem;
-  border-radius: none;
-}
 
-.linkCard {
+@media (max-width: 1200px) {
+  .register{
+    display: flex;
+    flex-direction: column;
+
+    &-span{
+      width: 100%;
+    }
   
+    &-fieldset {
+      display: flex;
+      flex-direction: column;    
+    }
+    
+    .profil-inputs {
+      height: 100vh;      
+    }
+  }
 }
-
-.card{
-  
-}
-

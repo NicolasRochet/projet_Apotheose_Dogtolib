@@ -1,8 +1,18 @@
 @use 'src/styles/vars';
 
+.component-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.veterinary {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+}
 
 .profil {
-  padding: 3rem 0 0 3rem;
+  // padding: 3rem 0 0 3rem;
   display: flex;
   flex-direction: column;
 
@@ -14,8 +24,7 @@
     flex-direction: column;
     gap: 1rem;
     flex-wrap: wrap;
-
-
+    
   }
 }
 
@@ -34,9 +43,4 @@
 
 input:read-only {
   cursor: default;
-}
-
-.veterinary {
-  display: flex;
-  flex-direction: column;
 }

@@ -1,4 +1,7 @@
+const DogtolibError = require('../errors/dogtolib-error');
 const { reminder, animal } = require('../models/index.datamapper');
+const notif = require('../services/notification.service');
+const debug = require('debug')('dogtolib:reminder.controller');
 
 const reminderController = {
 
@@ -13,21 +16,14 @@ const reminderController = {
       reminders = await reminder.findAnimalsRemindersByAccountId(req.userId);
     }
 
-    if (!reminders) {
-      return res.status(404).json({ error: 'no reminders found' });
-    }
-
     return res.json({ reminders });
   },
 
   async getAnimalReminders(req, res) {
     const { id } = req.params;
     const reminders = await reminder.findAnimalReminders(id);
-    if (!reminders) {
-      return res.status(404).json({ error: 'no reminders found' });
-    }
-    if (reminders[0].account_id !== req.userId) {
-      return res.status(403).json({ error: 'you are not allowed to see this animal reminders' });
+    if (reminders.length !== 0 && reminders[0].account_id !== req.userId) {
+      throw new DogtolibError('you are not allowed to see this animal reminders', 403);
     }
 
     return res.json({ reminders });
@@ -44,26 +40,33 @@ const reminderController = {
     // Cas du propriétaire d'animaux
     if (req.userRole === 'O') {
       if (!req.body?.animal_id) {
-        return res.status(400).json({ error: 'animal_id is missing' });
+        throw new DogtolibError('animal_id is missing', 400);
       }
       const reminderAnimal = await animal.findByPk(req.body.animal_id);
       // On vérifie que l'animal concerné par le rappel
       // appartient bien à l'utilisateur connecté
       if (reminderAnimal.account_id !== req.userId) {
-        return res.status(403).json({ error: 'you are not allowed to add a reminder to this animal' });
+        throw new DogtolibError('you are not allowed to add a reminder to this animal', 403);
       }
 
       newReminder = await reminder.create({ ...req.body });
     }
-    return res.status(201).json({ newReminder });
+    // Envoi du mail de notification
+    await notif.sendNewReminderMail({ ...newReminder, recipient: req.userEmail });
+
+    return res.status(201).json({ reminder: newReminder });
   },
 
   async patchReminder(req, res) {
     const toPatchReminder = await reminder.findByPk(req.params.id);
+
+    if (!toPatchReminder) {
+      res.status(404).json({ reminder: null });
+    }
     // Cas du vétérinaire
     if (req.userRole === 'V') {
       if (toPatchReminder.veterinary_id !== req.veterinaryId) {
-        return res.status(403).json({ error: 'you are not allowed to update this reminder' });
+        throw new DogtolibError('you are not allowed to update this reminder', 403);
       }
     }
 
@@ -72,25 +75,25 @@ const reminderController = {
       const reminderAnimal = await animal.findByPk(toPatchReminder.animal_id);
 
       if (reminderAnimal.account_id !== req.userId) {
-        return res.status(403).json({ error: 'you are not allowed to update this reminder' });
+        throw new DogtolibError('you are not allowed to update this reminder', 403);
       }
     }
     const patchedReminder = await reminder.update({ id: req.params.id, ...req.body });
-    return res.json({ reponse: patchedReminder });
+    return res.json({ reminder: patchedReminder });
   },
 
   async deleteReminder(req, res) {
     const toDeleteReminder = await reminder.findByPk(req.params.id);
     if (req.userRole === 'V') {
       if (toDeleteReminder.veterinary_id !== req.veterinaryId) {
-        return res.status(403).json({ error: 'you are not allowed to delete this reminder' });
+        throw new DogtolibError('you are not allowed to delete this reminder', 403);
       }
     }
 
     if (req.userRole === 'O') {
       const reminderAnimal = await animal.findByPk(toDeleteReminder.animal_id);
       if (reminderAnimal.account_id !== req.userId) {
-        return res.status(403).json({ error: 'you are not allowed to delete this reminder' });
+        throw new DogtolibError('you are not allowed to delete this reminder', 403);
       }
     }
     await reminder.delete(req.params.id);
